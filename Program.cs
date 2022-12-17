@@ -1,38 +1,28 @@
-﻿using System;
+﻿using Lesson_7.BLL;
 
-namespace Homework_1
+namespace Lesson_7_Homework.CLI
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Please, enter the length of a squere side: ");
-            int a = Convert.ToInt32(Console.ReadLine());
-            
-            int squere_perimeter = a * 4;
-            int squere_area = a * a;
+            const string phoneBookLocation = @"C:\Users\mlesy\temp\Lv-724\Lesia_Maiatsaka\Lesson_7\Lesson_7_Homework.CLI\Phones.txt";
+            const string copyPath = @"C:\Users\mlesy\temp\Lv-724\Lesia_Maiatsaka\Lesson_7\Lesson_7_Homework.CLI\Phones2.txt";
 
-            Console.WriteLine($"Perimeter of the squere is: {squere_perimeter}");
-            Console.WriteLine("The squere area is: {0}", squere_area);
+            var phoneBook = new TextPhoneBook(new StreamReader(phoneBookLocation), new StreamWriter(copyPath));
+            phoneBook.CreatePhoneBookEntries(await phoneBook.ReadFromPhoneBookAsync());
+            await phoneBook.CopyPhoneBookAsynk();
 
-            Console.WriteLine("What is your name? ");
-            string name = Console.ReadLine();
+            Console.WriteLine("name: ");
+            var userInput = Console.ReadLine();
 
-            Console.WriteLine("How old are you, {0}", name);
-            int age = Convert.ToInt32(Console.ReadLine());
+            foreach (var item in phoneBook.Entries.Where(e => e.Key.Contains(userInput, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine($"{item.Key} has number +3{item.Value}");
+            }
 
-            Console.WriteLine($"{name}, Your age is {age}");
-
-            Console.Write("Enter a radius: ");
-            double radius = Convert.ToDouble(Console.ReadLine());
-
-            const double PI = 3.14;
-            double length = PI * 2 * radius;
-            double area = PI * radius * radius;
-            double volume = 4 / 3 * PI * radius * radius * radius;
-
-            Console.WriteLine($"Circle parameters are:\n\tVolume: {volume}\n\tArea: {area}\n\tLength: {length}");
+            Console.ReadKey();
         }
+        
     }
 }
-
